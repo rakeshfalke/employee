@@ -4,17 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use Illuminate\Http\Request;
+use App\Repositories\DepartmentRepository;
 
 class DepartmentController extends Controller
 {
+    protected $depatmentModel;
+
+    public function __construct(Department $depatment)
+    {
+      // set the model
+      $this->depatmentModel = new DepartmentRepository($depatment);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+      $currentPage = $request->query('page')? $request->query('page') : 1;
+      $department = $this->depatmentModel->getRecordsList($currentPage);
+      return view('department.list')->with('departments', $department);
     }
 
     /**

@@ -7,31 +7,34 @@ use App\Department;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\DepartmentRepository;
+
 
 use Session;
 Use Redirect;
 
 class EmployeeController extends Controller
 {
-   protected $model;
+   protected $employeeModel;
+   protected $depatmentModel;
 
-   public function __construct(Employee $employee)
+   public function __construct(Employee $employee, Department $depatment)
    {
      // set the model
-     $this->model = new EmployeeRepository($employee);
+     $this->employeeModel = new EmployeeRepository($employee);
+     $this->depatmentModel = new DepartmentRepository($depatment);
    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        return view('employee.list');
+        $currentPage = $request->query('page')? $request->query('page') : 1;
+        $employees = $this->employeeModel->getRecordsList($currentPage);
+        return view('employee.list')->with('employees', $employees);
     }
 
     /**
@@ -42,9 +45,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $employee = new Employee;
-        $department = Cache::get('department');//DB::table('department')->pluck('name','id');
-        //$expiresAt = now()->addMinutes(10);
-        //Cache::put('department', $department, $expiresAt);
+        $department = $this->depatmentModel->getDepartmentList();
         return view('employee.create', ['employee' => $employee, 'department' => $department ]);
     }
 
@@ -71,7 +72,7 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-      return view('employee.show')->with('employee', $this->model->getById($id));
+      return view('employee.show')->with('employee', $this->employeeModel->getEmployeeById($id));
     }
 
     /**

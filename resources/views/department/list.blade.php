@@ -11,29 +11,24 @@
 <thead>
 <tr>
 <th scope="col">#</th>
-<th scope="col">First</th>
-<th scope="col">Last</th>
-<th scope="col">Handle</th>
+<th scope="col">Name</th>
 <th scope="col">Operations</th>
-
 </tr>
 </thead>
 <tbody>
-@foreach ($employees as $employee)
+@foreach ($departments as $dept)
 <tr>
-<th scope="row">{{ $employee->id }}</th>
-<td>{{ $employee->first_name }}</td>
-<td>{{ $employee->last_name }}</td>
-<td>{{ $employee->pan }}</td>
+<th scope="row">{{ $dept->id }}</th>
+<td>{{ $dept->name }}</td>
 <td>
-  <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-info">View</a>
-  <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-primary">Edit</a>
+  <a href="{{ route('department.show', $dept->id) }}" class="btn btn-info">View</a>
+  <a href="{{ route('department.edit', $dept->id) }}" class="btn btn-primary">Edit</a>
 </td>
 </tr>
 @endforeach
 </tbody>
 </table>
-{{ $employees->links() }}
+{{ $departments->links() }}
                 </div>
             </div>
         </div>

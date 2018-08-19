@@ -24,5 +24,5 @@ Route::resources([
 ]);
 
 Route::resources([
-    'Department' => 'DepartmentController'
+    'department' => 'DepartmentController'
 ]);

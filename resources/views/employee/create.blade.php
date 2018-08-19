@@ -7,15 +7,8 @@
             <div class="card card-default">
                 <div class="card-header">Create Employee</div>
                 <div class="card-body">
-                  @if ($errors->any())
-                  <div class="alert alert-danger">
-                    <ul>
-                      @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                      @endforeach
-                    </ul>
-                  </div>
-                  @endif
+                  @include('partials.alerts.errors')
+                  @include('partials.alerts.success')
                   {!! Form::model($employee, ['action' => 'EmployeeController@store']) !!}
                       <div class="form-row">
                         <div class="form-group col-md-6">

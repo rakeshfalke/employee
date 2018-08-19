@@ -2,17 +2,18 @@
 
 namespace App\Repositories;
 use App\Employee;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
-interface EmployeeRepositoryInterface {
-    public function getEmployeeById($id);
+interface DepartmentRepositoryInterface {
+    public function getDepartmentList();
     public function getRecordsList($currentPage = null, $columns = array('*'));
 }
 
-class EmployeeRepository implements EmployeeRepositoryInterface
+class DepartmentRepository implements DepartmentRepositoryInterface
 {
-    const CACHE_KEY = 'emp-';
+    const CACHE_KEY = 'dept-';
     // model property on class instances
     protected $model;
 
@@ -20,12 +21,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function __construct(Model $model)
     {
         $this->model = $model;
-    }
-
-    // Get all instances of model
-    public function getEmployeeById($id)
-    {
-        return $this->model->find($id);
     }
 
     /**
@@ -37,9 +32,25 @@ class EmployeeRepository implements EmployeeRepositoryInterface
         return $key = static::CACHE_KEY . $key;
     }
 
+    // Get all instances of model
+    public function getDepartmentList()
+    {
+      if (!Cache::has($this->generateCacheKey('deptlist-dropdown'))){
+        $deptList = [];
+        $departments = $this->model->all();
+        foreach($departments as $dept){
+          $deptList[$dept->id] = $dept->name;
+        }
+        $expiresAt = now()->addMinutes(60*24);
+        Cache::put($this->generateCacheKey('deptlist-dropdown'), $deptList, $expiresAt);
+        return $deptList;
+      }
+      return Cache::get($this->generateCacheKey('deptlist-dropdown'), []);
+    }
+
     public function getRecordsList($currentPage = null, $columns = array('*'))
     {
-      $key = 'emplist-' . $currentPage;
+      $key = 'deptlist-' . $currentPage;
       if (!Cache::has($this->generateCacheKey($key))) {
         $records = $this->model->paginate(1, $columns);
         $expiresAt = now()->addMinutes(10);
