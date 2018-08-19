@@ -2,22 +2,16 @@
 
 namespace App\Repositories;
 use App\Employee;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-interface EmployeeRepositoryInterface {
-    public function getEmployeeById($id);
-    public function getRecordsList($currentPage = null, $columns = array('*'));
-}
-
-class EmployeeRepository implements EmployeeRepositoryInterface
+class EmployeeRepository implements EmployeeInterface
 {
     const CACHE_KEY = 'emp-';
     // model property on class instances
     protected $model;
 
     // Constructor to bind model to repo
-    public function __construct(Model $model)
+    public function __construct(Employee $model)
     {
         $this->model = $model;
     }
@@ -32,7 +26,7 @@ class EmployeeRepository implements EmployeeRepositoryInterface
      * @param $key
      * @return string
      */
-    private function generateCacheKey($key)
+    public function generateCacheKey($key)
     {
         return $key = static::CACHE_KEY . $key;
     }

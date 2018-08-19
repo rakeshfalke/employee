@@ -1,24 +1,18 @@
 <?php
 
 namespace App\Repositories;
-use App\Employee;
+use App\Department;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 
-interface DepartmentRepositoryInterface {
-    public function getDepartmentList();
-    public function getRecordsList($currentPage = null, $columns = array('*'));
-}
-
-class DepartmentRepository implements DepartmentRepositoryInterface
+class DepartmentRepository implements DepartmentInterface
 {
     const CACHE_KEY = 'dept-';
     // model property on class instances
     protected $model;
 
     // Constructor to bind model to repo
-    public function __construct(Model $model)
+    public function __construct(Department $model)
     {
         $this->model = $model;
     }
@@ -27,7 +21,7 @@ class DepartmentRepository implements DepartmentRepositoryInterface
      * @param $key
      * @return string
      */
-    private function generateCacheKey($key)
+    public function generateCacheKey($key)
     {
         return $key = static::CACHE_KEY . $key;
     }

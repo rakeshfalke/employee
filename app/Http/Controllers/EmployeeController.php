@@ -7,8 +7,8 @@ use App\Department;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Str;
-use App\Repositories\EmployeeRepository;
-use App\Repositories\DepartmentRepository;
+use App\Repositories\EmployeeInterface;
+use App\Repositories\DepartmentInterface;
 
 
 use Session;
@@ -19,11 +19,11 @@ class EmployeeController extends Controller
    protected $employeeModel;
    protected $depatmentModel;
 
-   public function __construct(Employee $employee, Department $depatment)
+   public function __construct(EmployeeInterface $employee, DepartmentInterface $depatment)
    {
      // set the model
-     $this->employeeModel = new EmployeeRepository($employee);
-     $this->depatmentModel = new DepartmentRepository($depatment);
+     $this->employeeModel = $employee;
+     $this->depatmentModel = $depatment;
    }
     /**
      * Display a listing of the resource.
