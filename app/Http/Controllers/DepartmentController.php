@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use Illuminate\Http\Request;
-use App\Repositories\DepartmentInterface;
+use App\Repositories\Interfaces\DepartmentRepositoryInterface;
 
 class DepartmentController extends Controller
 {
     protected $depatmentModel;
 
-    public function __construct(DepartmentInterface $depatment)
+    public function __construct(DepartmentRepositoryInterface $depatment)
     {
       // set the model
       $this->depatmentModel = $depatment;

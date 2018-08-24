@@ -7,8 +7,8 @@ use App\Department;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Str;
-use App\Repositories\EmployeeInterface;
-use App\Repositories\DepartmentInterface;
+use App\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Repositories\Interfaces\DepartmentRepositoryInterface;
 
 
 use Session;
@@ -19,7 +19,7 @@ class EmployeeController extends Controller
    protected $employeeModel;
    protected $depatmentModel;
 
-   public function __construct(EmployeeInterface $employee, DepartmentInterface $depatment)
+   public function __construct(EmployeeRepositoryInterface $employee, DepartmentRepositoryInterface $depatment)
    {
      // set the model
      $this->employeeModel = $employee;

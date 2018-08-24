@@ -1,7 +1,7 @@
 <?php
-namespace App\Repositories;
+namespace App\Repositories\Interfaces;
 
-interface EmployeeInterface
+interface EmployeeRepositoryInterface
 {
     public function getEmployeeById($id);
     public function getRecordsList($currentPage = null, $columns = array('*'));

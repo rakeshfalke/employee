@@ -3,8 +3,9 @@
 namespace App\Repositories;
 use App\Employee;
 use Illuminate\Support\Facades\Cache;
+use App\Repositories\Interfaces\EmployeeRepositoryInterface;
 
-class EmployeeRepository implements EmployeeInterface
+class EmployeeRepository implements EmployeeRepositoryInterface
 {
     const CACHE_KEY = 'emp-';
     // model property on class instances

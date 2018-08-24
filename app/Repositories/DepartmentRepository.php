@@ -4,8 +4,9 @@ namespace App\Repositories;
 use App\Department;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Interfaces\DepartmentRepositoryInterface;
 
-class DepartmentRepository implements DepartmentInterface
+class DepartmentRepository implements DepartmentRepositoryInterface
 {
     const CACHE_KEY = 'dept-';
     // model property on class instances
