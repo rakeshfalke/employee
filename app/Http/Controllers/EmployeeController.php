@@ -6,10 +6,6 @@ use App\Employee;
 use App\Department;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
-use Illuminate\Support\Str;
-use App\Repositories\Interfaces\EmployeeRepositoryInterface;
-use App\Repositories\Interfaces\DepartmentRepositoryInterface;
-
 
 use Session;
 Use Redirect;
@@ -19,7 +15,7 @@ class EmployeeController extends Controller
    protected $employeeModel;
    protected $depatmentModel;
 
-   public function __construct(EmployeeRepositoryInterface $employee, DepartmentRepositoryInterface $depatment)
+   public function __construct(Employee $employee, Department $depatment)
    {
      // set the model
      $this->employeeModel = $employee;
@@ -32,8 +28,7 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $currentPage = $request->query('page')? $request->query('page') : 1;
-        $employees = $this->employeeModel->getRecordsList($currentPage);
+        $employees = $this->employeeModel->paginate(1, array('*'));
         return view('employee.list')->with('employees', $employees);
     }
 
@@ -44,9 +39,13 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $departmentList = [];
         $employee = new Employee;
-        $department = $this->depatmentModel->getDepartmentList();
-        return view('employee.create', ['employee' => $employee, 'department' => $department ]);
+        $departments = $this->depatmentModel->get(['id', 'name'])->toArray();
+        foreach ($departments as $dept) {
+            $departmentList[$dept['id']] = $dept['name'];
+        }
+        return view('employee.create', ['employee' => $employee, 'department' => $departmentList]);
     }
 
     /**
@@ -72,7 +71,7 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-      return view('employee.show')->with('employee', $this->employeeModel->getEmployeeById($id));
+      return view('employee.show')->with('employee', $this->employeeModel->findOrFail($id));
     }
 
     /**

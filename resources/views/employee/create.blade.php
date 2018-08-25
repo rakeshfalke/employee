@@ -20,7 +20,7 @@
                       <div class="form-row">
                         <div class="form-group col-md-2">
                           {!! Form::label('title', __('Title')) !!}
-                          {!! Form::select('department', array('Mr' => 'Mr', 'Ms' => 'Ms'), null, ['class' => 'form-control']) !!}
+                          {!! Form::select('title', array('Mr' => 'Mr', 'Ms' => 'Ms'), null, ['class' => 'form-control']) !!}
                         </div>
                         <div class="form-group col-md-5">
                           {!! Form::label('first_name', __('First Name')) !!}
@@ -81,7 +81,7 @@
                           {!! Form::select('nationality', array('1' => 'Mr', '2' => 'Ms'), null, ['class' => 'form-control']) !!}
                         </div>
                         <div class="form-group col-md-3">
-                          {!! Form::label('marital_status', __('marital_status')) !!}
+                          {!! Form::label('marital_status', __('Marital Status')) !!}
                           {!! Form::select('marital_status', array('single' => 'single', 'married' => 'married', 'unmarried' => 'unmarried', 'divorced' => 'divorced', 'widowed' => 'widowed'), null, ['class' => 'form-control']) !!}
                         </div>
                         <div class="form-group col-md-3">

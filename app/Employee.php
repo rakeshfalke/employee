@@ -14,7 +14,7 @@ class Employee extends Model
   use Encryptable;
 
   protected static $logAttributes = ['pan', 'social_security', 'department', 'employee_id'];
-  protected $encryptable = ['pan', 'social_security'];
+  protected $encryptable = [];
   /**
    * The attributes that are mass assignable.
    *

@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 class UserController extends Controller
 {
-public $successStatus = 200;
-/**
+    public $successStatus = 200;
+   /**
      * login api
      *
      * @return \Illuminate\Http\Response
