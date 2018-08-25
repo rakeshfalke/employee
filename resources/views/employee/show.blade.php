@@ -6,6 +6,8 @@
             <div class="card card-default">
                 <div class="card-header">Details</div>
                 <div class="card-body">
+                    @include('partials.alerts.errors')
+                    @include('partials.alerts.success')
                   <div class="row">
                   <table class="table table-striped">
                     <tr scope="row">

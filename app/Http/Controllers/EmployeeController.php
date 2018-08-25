@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Employee;
-use App\Department;
+use App\Http\Responses\EmployeeShowResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\EmployeeUpdateRequest;
+use App\Http\Responses\EmployeeIndexResponse;
+use App\Department as Department;
+use App\Employee as Employee;
 
 use Session;
 Use Redirect;
@@ -15,11 +18,9 @@ class EmployeeController extends Controller
    protected $employeeModel;
    protected $depatmentModel;
 
-   public function __construct(Employee $employee, Department $depatment)
+   public function __construct()
    {
      // set the model
-     $this->employeeModel = $employee;
-     $this->depatmentModel = $depatment;
    }
     /**
      * Display a listing of the resource.
@@ -28,8 +29,7 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employees = $this->employeeModel->paginate(1, array('*'));
-        return view('employee.list')->with('employees', $employees);
+        return new EmployeeIndexResponse();
     }
 
     /**
@@ -39,13 +39,11 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        $departmentList = [];
         $employee = new Employee;
-        $departments = $this->depatmentModel->get(['id', 'name'])->toArray();
-        foreach ($departments as $dept) {
-            $departmentList[$dept['id']] = $dept['name'];
-        }
-        return view('employee.create', ['employee' => $employee, 'department' => $departmentList]);
+        $departments = \Cache::remember('departments', 24*60, function() {
+            return Department::all()->pluck('name', 'id');
+        });
+        return view('employee.create', ['employee' => $employee, 'department' => $departments]);
     }
 
     /**
@@ -56,11 +54,12 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequest $request)
     {
-      // Retrieve the validated input data...
-      $employee = Employee::create($request->all());
-      // redirect
-      Session::flash('message', 'Successfully created employee!');
-      return redirect()->route('employee.show', $employee->id);
+        $validated = $request->validated();
+        // Retrieve the validated input data...
+        $employee = Employee::create($request->all());
+        // redirect
+        Session::flash('flash_message', 'Successfully created employee!');
+        return redirect()->route('employee.show', $employee->id);
     }
 
     /**
@@ -69,9 +68,9 @@ class EmployeeController extends Controller
      * @param  \App\Employee  $employees
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uuid)
     {
-      return view('employee.show')->with('employee', $this->employeeModel->findOrFail($id));
+        return new EmployeeShowResponse($uuid);
     }
 
     /**
@@ -82,7 +81,10 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        //
+        $departments = \Cache::remember('departments', 24*60, function() {
+            return Department::all()->pluck('name', 'id');
+        });
+        return view('employee.edit', ['employee' => $employee, 'department' => $departments]);
     }
 
     /**
@@ -92,9 +94,15 @@ class EmployeeController extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeUpdateRequest $request, $id)
     {
-        //
+        $employee= Employee::findOrFail($id);
+        // Retrieve the validated input data...
+        $employee->fill($request->input())->save();
+        // redirect
+        Session::flash('flash_message', 'Successfully updated employee!');
+        return redirect()->route('employee.show', $employee->id);
+
     }
 
     /**

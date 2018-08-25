@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-    class EmployeeRequest extends FormRequest
+class EmployeeUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,10 @@ use Illuminate\Foundation\Http\FormRequest;
     public function rules()
     {
         return [
-            'first_name' => 'bail|required|max:5',
+            'first_name' => 'bail|required|max:25',
             'last_name' => 'bail|required|max:25',
-            'employee_id' => 'bail|required|unique:employees,employee_id|max:25',
-            'primary_email' => 'bail|required|email|unique:employees,primary_email'
+            'employee_id' => 'bail|required|max:25|unique:employees,employee_id,' . $this->employee,
+            'primary_email' => 'bail|required|email|unique:employees,primary_email,' . $this->employee
         ];
     }
 }

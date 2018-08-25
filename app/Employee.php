@@ -37,6 +37,7 @@ class Employee extends Model
       'employee_id',
       'children'
   ];
+
   protected $guarded = ['id', 'uuid'];
 
   protected static function boot()
