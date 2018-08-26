@@ -4,16 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use Illuminate\Http\Request;
-use App\Repositories\Interfaces\DepartmentRepositoryInterface;
 
 class DepartmentController extends Controller
 {
-    protected $depatmentModel;
+    protected $departmentId;
 
-    public function __construct(DepartmentRepositoryInterface $depatment)
+    public function __construct()
     {
-      // set the model
-      $this->depatmentModel = $depatment;
+        //
     }
 
     /**
@@ -23,9 +21,11 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-      $currentPage = $request->query('page')? $request->query('page') : 1;
-      $department = $this->depatmentModel->getRecordsList($currentPage);
-      return view('department.list')->with('departments', $department);
+        $page = $request->has('page') ? $request->query('page') : 1;
+        $departments = \Cache::remember('department-list-' . $page, 5, function() {
+            return Department::paginate(2, array('*'));
+        });
+        return view('department.list')->with('departments', $departments);
     }
 
     /**
@@ -55,9 +55,13 @@ class DepartmentController extends Controller
      * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function show(Department $department)
+    public function show($id)
     {
-        //
+        $this->departmentId = $id;
+        $department = \Cache::remember('department-id-' . $this->departmentId, 24*60, function() {
+            return Department::findOrFail($this->departmentId);
+        });
+        return view('department.show')->with('department', $department);
     }
 
     /**

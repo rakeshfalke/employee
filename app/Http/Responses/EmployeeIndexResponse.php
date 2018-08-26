@@ -21,7 +21,7 @@ class EmployeeIndexResponse implements Responsable
     {
         $page = $request->has('page') ? $request->query('page') : 1;
         $employees = \Cache::remember('employee-list-' . $page, 5, function() {
-            return Employee::paginate(1, array('*'));
+            return Employee::paginate(2, array('*'));
         });
         return view('employee.list')->with('employees', $employees);
     }

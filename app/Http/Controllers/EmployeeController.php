@@ -68,9 +68,9 @@ class EmployeeController extends Controller
      * @param  \App\Employee  $employees
      * @return \Illuminate\Http\Response
      */
-    public function show($uuid)
+    public function show($id)
     {
-        return new EmployeeShowResponse($uuid);
+        return new EmployeeShowResponse($id);
     }
 
     /**
@@ -96,7 +96,7 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeUpdateRequest $request, $id)
     {
-        $employee= Employee::findOrFail($id);
+        $employee = Employee::findOrFail($id);
         // Retrieve the validated input data...
         $employee->fill($request->input())->save();
         // redirect
